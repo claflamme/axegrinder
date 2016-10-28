@@ -7,6 +7,8 @@ const Phantom = require('phantomjs-prebuilt');
 const Crawler = require('simplecrawler');
 const chalk = require('chalk');
 
+const csv = require('./csv');
+
 // Custom selenium driver that uses the bundled phantomjs, so we don't need a
 // binary in the PATH.
 const customPhantom = WebDriver.Capabilities.phantomjs();
@@ -16,9 +18,14 @@ const driverTemplate = new WebDriver.Builder().withCapabilities(customPhantom);
 module.exports = (argv) => {
 
   const crawler = Crawler(argv.url);
+  const writer = csv(argv.csv);
 
   crawler.on('crawlstart', () => {
     console.log('\nBuilding initial map. One moment, please...\n');
+  });
+
+  crawler.on('complete', () => {
+    writer.close();
   });
 
   crawler.on('fetchstart', (queueItem, requestOptions) => {
@@ -30,6 +37,9 @@ module.exports = (argv) => {
             console.error(chalk.red('✘ ' + queueItem.url));
             const errors = results.violations.map(v => '  - ' + v.help);
             console.error(chalk.gray(errors.join('\n')));
+            if (argv.csv) {
+              writer.addViolations(queueItem.url, results.violations);
+            }
           } else {
             console.log(chalk.green('✓ ' + queueItem.url));
           }
@@ -45,7 +55,7 @@ module.exports = (argv) => {
   crawler.addFetchCondition((queueItem, referrerQueueItem) => {
     const urlPath = url.parse(queueItem.path).path;
     const urlExt = path.extname(urlPath);
-    return urlExt === '' && queueItem.path.includes(argv.only || '');
+    return urlExt === '' && queueItem.path.includes(argv.include || '');
   });
 
   crawler.host = url.parse(argv.url).hostname
