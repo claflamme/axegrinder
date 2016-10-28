@@ -24,16 +24,20 @@ module.exports = (argv) => {
   crawler.on('fetchstart', (queueItem, requestOptions) => {
     const driver = driverTemplate.build();
     driver.get(queueItem.url).then(() => {
-      AxeBuilder(driver).withTags(['wcag2a', 'wcag2aa']).analyze((results) => {
-        if (results.violations.length > 0) {
-          console.error(chalk.red('✘ ' + queueItem.url));
-          const errors = results.violations.map(v => '  - ' + v.help);
-          console.error(chalk.gray(errors.join('\n')));
-        } else {
-          console.log(chalk.green('✓ ' + queueItem.url));
-        }
-        driver.quit();
-      });
+      try {
+        AxeBuilder(driver).withTags(['wcag2a', 'wcag2aa']).analyze((results) => {
+          if (results.violations.length > 0) {
+            console.error(chalk.red('✘ ' + queueItem.url));
+            const errors = results.violations.map(v => '  - ' + v.help);
+            console.error(chalk.gray(errors.join('\n')));
+          } else {
+            console.log(chalk.green('✓ ' + queueItem.url));
+          }
+          driver.quit();
+        });
+      } catch(e) {
+        console.error(chalk.red('Error fetching ' + queueItem.url));
+      }
     });
   });
 
