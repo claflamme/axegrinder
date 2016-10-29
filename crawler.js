@@ -23,11 +23,9 @@ module.exports = (argv) => {
   });
 
   crawler.on('fetchstart', function(queueItem, requestOptions) {
-    const next = this.wait();
     download(queueItem.url, (err, results) => {
       if (argv.csv && results.violations.length > 0) {
         writer.addViolations(queueItem.url, results.violations);
-        next();
       }
     });
   });
