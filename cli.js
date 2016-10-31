@@ -5,7 +5,6 @@ const yargs = require('yargs');
 const crawler = require('./crawler');
 
 yargs
-.command('fetch <url>', 'Fetch and analyze a single web page.')
 .command('crawl <url>', 'Crawl a website for issues, starting at the given URL.', {
   include: {
     describe: 'A string that URLs must include to be crawled.',
