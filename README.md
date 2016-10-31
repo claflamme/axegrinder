@@ -1,10 +1,7 @@
 # Axegrinder
 
-An all-in-one CLI for running [aXe](https://www.deque.com/products/axe/) tests on several pages (or entire websites) at once. It's as easy as:
+An all-in-one tool for running [aXe](https://www.deque.com/products/axe/) accessibility tests on several pages (or entire websites) at once. It bundles Selenium WebDriver, aXe, and PhantomJS into a tidy lil' CLI.
 
-```
-axegrinder crawl https://nodejs.org
-```
 
 ## Installation
 
