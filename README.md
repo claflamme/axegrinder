@@ -34,6 +34,21 @@ axegrinder crawl https://nodejs.org --csv=output.csv
 
 If you abort the crawl early, your results up to that point will still be saved to the CSV file.
 
+### Accessibility Levels
+
+Since axegrinder is just a wrapper around aXe, you can use any of the aXe "tags" to specify how strict you want to be. You can set multiple levels at once, as a comma-separated list:
+
+```
+axegrinder crawl http://nodejs.org --levels=wcag2a,wcag2aa
+```
+
+The available levels are listed below. I think the names are pretty self-explanatory, but you can check the aXe docs if you want specifics.
+
+- `wcag2a`
+- `wcag2aa`
+- `section508`
+- `best-practice`
+
 ### Filter URLs
 
 You can include only pages whose URL contains a specific string. Just use the `--include` arg.

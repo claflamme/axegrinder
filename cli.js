@@ -11,7 +11,11 @@ yargs
   },
   csv: {
     describe: 'Dump output to a CSV file at the specified path.'
-  }
+  },
+  levels: {
+    describe: 'Comma-separated list of accesibility levels to enforce.',
+    default: 'wcag2a,wcag2aa',
+  },
 }, crawler)
 .help()
 .argv;

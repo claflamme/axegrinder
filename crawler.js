@@ -13,6 +13,7 @@ module.exports = (argv) => {
 
   const crawler = Crawler(argv.url);
   const writer = csv(argv.csv);
+  const levels = argv.levels.split(',');
 
   crawler.on('crawlstart', () => {
     console.log('\nBuilding initial map. One moment, please...\n');
@@ -23,7 +24,7 @@ module.exports = (argv) => {
   });
 
   crawler.on('fetchstart', function(queueItem, requestOptions) {
-    download(queueItem.url, (err, results) => {
+    download(queueItem.url, levels, (err, results) => {
       if (argv.csv && results.violations.length > 0) {
         writer.addViolations(queueItem.url, results.violations);
       }

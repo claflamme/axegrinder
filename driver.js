@@ -21,11 +21,11 @@ module.exports = () => {
   customPhantom.set('phantomjs.binary.path', Phantom.path);
   const driverTemplate = new WebDriver.Builder().withCapabilities(customPhantom);
 
-  return (url, callback) => {
+  return (url, levels, callback) => {
     const driver = driverTemplate.build();
     driver.get(url).then(() => {
       try {
-        AxeBuilder(driver).withTags(['wcag2a', 'wcag2aa']).analyze((results) => {
+        AxeBuilder(driver).withTags(levels).analyze((results) => {
           driver.quit();
           logResults(url, results);
           callback(null, results);
