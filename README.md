@@ -32,15 +32,15 @@ axegrinder crawl https://nodejs.org --csv=output.csv
 
 If you abort the crawl early, your results up to that point will still be saved to the CSV file.
 
-### Accessibility Levels
+### Accessibility Standards
 
-Since axegrinder is just a wrapper around aXe, you can use any of the aXe "tags" to specify how strict you want to be. You can set multiple levels at once, as a comma-separated list:
+Since axegrinder is just a wrapper around aXe, you can use any of the aXe "tags" to specify which standards to validate against. You can set multiple standards at once, as a comma-separated list:
 
 ```
 axegrinder crawl http://nodejs.org --levels=wcag2a,wcag2aa
 ```
 
-The available levels are listed below. I think the names are pretty self-explanatory, but you can check the aXe docs if you want specifics.
+The available options are listed below. I think the names are pretty self-explanatory, but you can check the aXe docs if you want specifics.
 
 - `wcag2a`
 - `wcag2aa`
