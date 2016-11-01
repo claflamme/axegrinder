@@ -1,6 +1,6 @@
 # Axegrinder
 
-An all-in-one tool for running [aXe](https://www.deque.com/products/axe/) accessibility tests on several pages (or entire websites) at once. It bundles Selenium WebDriver, aXe, and PhantomJS into a tidy lil' CLI.
+An all-in-one tool for running aXe accessibility tests on several pages (or entire websites) at once. It bundles Selenium WebDriver, aXe, and PhantomJS into a tidy lil' CLI.
 
 ![preview animation](http://i.imgur.com/BOYkHfu.gif)
 

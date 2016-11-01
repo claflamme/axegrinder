@@ -19,10 +19,6 @@ module.exports = (argv) => {
     console.log('\nBuilding initial map. One moment, please...\n');
   });
 
-  crawler.on('complete', () => {
-    writer.close();
-  });
-
   crawler.on('fetchstart', function(queueItem, requestOptions) {
     download(queueItem.url, levels, (err, results) => {
       if (argv.csv && results.violations.length > 0) {

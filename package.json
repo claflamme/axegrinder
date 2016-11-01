@@ -1,7 +1,29 @@
 {
   "name": "axegrinder",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "1.0.1",
+  "main": "cli.js",
+  "author": "Cory LaFlamme <me@corylaflamme.com> (https://github.com/claflamme)",
+  "description": "Crawl websites for accessibility issues from the command line.",
+  "repository": "claflamme/axegrinder",
+  "homepage": "https://github.com/claflamme/axegrinder",
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "crawler",
+    "crawl",
+    "axe",
+    "cli",
+    "command-line",
+    "command",
+    "line",
+    "phantomjs",
+    "selenium",
+    "webdriver"
+  ],
+  "bugs": {
+    "url": "https://github.com/claflamme/axegrinder/issues"
+  },
+  "license": "ISC",
   "preferGlobal": true,
   "bin": "./cli.js",
   "dependencies": {
