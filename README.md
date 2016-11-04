@@ -2,7 +2,9 @@
 
 An all-in-one tool for running aXe accessibility tests on several pages (or entire websites) at once. It bundles Selenium WebDriver, aXe, and PhantomJS into a tidy lil' CLI.
 
-![preview animation](http://i.imgur.com/BOYkHfu.gif)
+<p align="center">
+  <img src="http://i.imgur.com/BOYkHfu.gif" />
+</p>
 
 > This tool is for flagging problematic pages. For detailed page info, try one of the aXe browser plugins.
 >
