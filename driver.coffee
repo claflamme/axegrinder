@@ -13,21 +13,22 @@ getNodeTargets = (axeNodesList) ->
   nodeTargets
 
 logResults = (url, results) ->
-
   if results.violations.length > 0
-    console.error chalk.bold.red '✘ ' + url
+    console.error chalk.underline.bold.red '✘ ' + url + '\n'
   else if results.incomplete.length > 0
-    console.log chalk.bold.yellow '? ' + url
+    console.log chalk.underline.bold.yellow '? ' + url + '\n'
   else
-    console.log chalk.bold.green '✓ ' + url
+    console.log chalk.underline.bold.green '✓ ' + url + '\n'
 
   violations = results.violations.map (v) ->
     nodeTargets = getNodeTargets v.nodes
-    "  [violation] #{ v.help }\n#{ chalk.gray nodeTargets.join('\n') }"
+    label = chalk.red "  • [violation]"
+    "#{ label } #{ v.help }\n#{ chalk.gray nodeTargets.join('\n') }"
 
   incomplete = results.incomplete.map (i) ->
     nodeTargets = getNodeTargets i.nodes
-    "  [incomplete] #{ i.help }\n#{ chalk.gray nodeTargets.join('\n') }"
+    label = chalk.yellow "  • [incomplete]"
+    "#{ label } #{ i.help }\n#{ chalk.gray nodeTargets.join('\n') }"
 
   console.error [violations..., incomplete...].join('\n'), '\n'
 

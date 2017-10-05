@@ -13,7 +13,7 @@ crawlUrl = (crawlUrl, onItem, onComplete) ->
   urlPath = url.parse(crawlUrl).path
 
   crawler.on 'crawlstart', ->
-    console.log '\n--- Building sitemap. One moment, please...\n'
+    console.log '\n--- Building sitemap. This might take a bit...\n'
 
   crawler.on 'queueadd', (queueItem) ->
     urlList.push queueItem.url
@@ -21,7 +21,7 @@ crawlUrl = (crawlUrl, onItem, onComplete) ->
     onItem queueItem
 
   crawler.on 'complete', ->
-    console.log '\n--- Sitemap completed!\n'
+    console.log '\n--- Sitemap completed!'
     onComplete urlList
 
   crawler.addFetchCondition (queueItem, referrerQueueItem) ->
@@ -40,7 +40,7 @@ onItem = (item) ->
   # Nothing for now...
 
 onComplete = (urlList) ->
-  console.log '\n--- Running tests...\n'
+  console.log '--- Running tests...\n'
   eachSeries urlList, ((url, callback) ->
     testUrl url, callback
   ), ( ->
