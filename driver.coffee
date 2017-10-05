@@ -34,6 +34,21 @@ logResults = (url, results) ->
 module.exports = ->
   testWindow = Nightmare()
 
+  # The SIGINT (ctrl + c) event doesn't work natively on windows at the process
+  # level, but you can still catch the readline event.
+  if process.platform is 'win32'
+    rl = require('readline').createInterface
+      input: process.stdin
+      output: process.stdout
+    rl.on 'SIGINT', -> process.emit 'SIGINT'
+
+  # If the process is prematurely terminated, the electron instance will get
+  # orphaned and stay in memory. Gotta shut it down here. Nightmare will kill
+  # electron if `process.exit()` is called normally.
+  process.on 'SIGINT', ->
+    testWindow.end().then ->
+    process.exit()
+
   (url, callback) ->
     testWindow.goto(url)
     .inject('js', path.join(__dirname, 'node_modules', 'axe-core', 'axe.js'))
