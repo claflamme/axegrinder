@@ -1,7 +1,6 @@
-#!/usr/bin/env node --no-warnings
+#!/usr/bin/env node
 
 const yargs = require('yargs');
-console.log(require('electron'))
 
 const crawler = require('./crawler');
 

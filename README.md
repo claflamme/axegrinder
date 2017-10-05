@@ -1,12 +1,12 @@
 # Axegrinder
 
-An all-in-one tool for running aXe accessibility tests on several pages (or entire websites) at once. It bundles Selenium WebDriver, aXe, and PhantomJS into a tidy lil' CLI.
+An all-in-one tool for crawling websites and running aXe accessibility tests on them.
 
 <p align="center">
   <img src="http://i.imgur.com/BOYkHfu.gif" />
 </p>
 
-> This tool is for flagging problematic pages. For detailed page info, try one of the aXe browser plugins.
+> This tool is for flagging problematic pages. For detailed results, try one of the aXe browser plugins.
 >
 > 👉 [Chrome](https://chrome.google.com/webstore/detail/axe/lhdoppojpmngadmnindnejefpokejbdd) 👉 [Firefox](https://addons.mozilla.org/en-us/firefox/addon/axe-devtools/)
 
@@ -16,7 +16,7 @@ An all-in-one tool for running aXe accessibility tests on several pages (or enti
 npm i axegrinder -g
 ```
 
-Axegrinder is a node.js package so you'll need [node and npm installed](https://nodejs.org/en/). If you don't have node installed already, you're probably the only one.
+Axegrinder is a node.js package so you'll need [node and npm installed](https://nodejs.org). If you don't have node installed already, you're probably the only one.
 
 ## Usage
 
@@ -26,11 +26,11 @@ For now, axegrinder only has one command: `crawl`. You can point the tool at a U
 axegrinder crawl https://nodejs.org
 ```
 
-This will output the results of the crawl to the terminal, in a nicely formatted list. Pages with accessibility violations will be highlighted in red.
+This will output the results of the crawl to the terminal, in a formatted list. Pages with accessibility violations will be highlighted in red.
 
 ### CSV Output
 
-Of course, it would be much more useful to save your results to a spreadsheet. By using the `--csv` arg, axegrinder can log each violation along with the URL of the page on which it was found.
+Of course, it would be much more useful to save your results to a spreadsheet. By using the `--csv` flag, axegrinder can log each violation along with the URL of the page on which it was found.
 
 ```
 axegrinder crawl https://nodejs.org --csv=output.csv
@@ -40,7 +40,7 @@ If you abort the crawl early, your results up to that point will still be saved 
 
 ### Accessibility Standards
 
-Since axegrinder is just a wrapper around aXe, you can use any of the aXe "tags" to specify which standards to validate against. You can set multiple standards at once, as a comma-separated list:
+Since axegrinder is a wrapper around aXe, you can use any of the aXe "tags" to specify which standards to validate against. You can set multiple standards at once, as a comma-separated list:
 
 ```
 axegrinder crawl http://nodejs.org --levels=wcag2a,wcag2aa
