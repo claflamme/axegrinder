@@ -21,7 +21,7 @@ crawlUrl = (crawlUrl, onItem, onComplete) ->
     onItem queueItem
 
   crawler.on 'complete', ->
-    console.log '\n--- Sitemap completed!'
+    console.log '\n--- Sitemap completed!\n'
     onComplete urlList
 
   crawler.addFetchCondition (queueItem, referrerQueueItem) ->
@@ -33,6 +33,7 @@ crawlUrl = (crawlUrl, onItem, onComplete) ->
   crawler.downloadUnsupported = false
   crawler.maxConcurrency = 5
   crawler.allowInitialDomainChange = true
+  crawler.respectRobotsTxt = false
 
   crawler.start()
 
@@ -40,11 +41,9 @@ onItem = (item) ->
   # Nothing for now...
 
 onComplete = (urlList) ->
-  console.log '--- Running tests...\n'
   eachSeries urlList, ((url, callback) ->
     testUrl url, callback
   ), ( ->
-    console.log '--- Tests complete!\n'
     process.exit 0
   )
 

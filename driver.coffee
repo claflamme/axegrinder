@@ -12,13 +12,16 @@ getNodeTargets = (axeNodesList) ->
 
   nodeTargets
 
+getUrlString = (url, icon, colour) ->
+  chalk.bold[colour] "#{ icon } #{ url }\n"
+
 logResults = (url, results) ->
   if results.violations.length > 0
-    console.error chalk.underline.bold.red '✘ ' + url + '\n'
+    console.error getUrlString url, '✘', 'red'
   else if results.incomplete.length > 0
-    console.log chalk.underline.bold.yellow '? ' + url + '\n'
+    console.log getUrlString url, '?', 'yellow'
   else
-    console.log chalk.underline.bold.green '✓ ' + url + '\n'
+    console.log getUrlString url, '✓', 'green'
 
   violations = results.violations.map (v) ->
     nodeTargets = getNodeTargets v.nodes
