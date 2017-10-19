@@ -3,37 +3,52 @@ axe = require 'axe-core'
 Nightmare = require 'nightmare'
 chalk = require 'chalk'
 
-getNodeTargets = (axeNodesList) ->
-  nodeTargets = []
+padStr = (str = '', numSpaces = 0) ->
+  "#{ ' '.repeat numSpaces }#{ str }"
+
+getXpathsFromNodes = (axeNodesList) ->
+  xpaths = []
 
   axeNodesList.forEach (node) ->
     node.target.forEach (target) ->
-      nodeTargets.push "    - #{ target }"
+      xpaths.push target
 
-  nodeTargets
+  xpaths
+
+# Returns a printable string of bulleted XPaths, each on a new line.
+getXpathsString = (xpathsList) ->
+  strings = xpathsList.map (xpath) ->
+    padStr "- #{ xpath }", 4
+
+  chalk.gray strings.join '\n'
 
 getUrlString = (url, icon, colour) ->
   chalk.bold[colour] "#{ icon } #{ url }\n"
 
+# Returns a printable string with aXe errors and (optionally) xpaths
+# for the erroneous nodes. Accepts an aXe "violations" collection.
+getErrorsString = (axeErrors, severityLabel, colour) ->
+  violations = axeErrors.map (v) ->
+    nodeTargets = getXpathsFromNodes v.nodes
+    label = chalk[colour] "  • [#{ severityLabel }]"
+    "#{ label } #{ v.help }\n#{ getXpathsString(nodeTargets) }"
+
 logResults = (url, results) ->
+  hasErrors = false
+
   if results.violations.length > 0
+    hasErrors = true
     console.error getUrlString url, '✘', 'red'
   else if results.incomplete.length > 0
+    hasErrors = true
     console.log getUrlString url, '?', 'yellow'
   else
     console.log getUrlString url, '✓', 'green'
 
-  violations = results.violations.map (v) ->
-    nodeTargets = getNodeTargets v.nodes
-    label = chalk.red "  • [violation]"
-    "#{ label } #{ v.help }\n#{ chalk.gray nodeTargets.join('\n') }"
-
-  incomplete = results.incomplete.map (i) ->
-    nodeTargets = getNodeTargets i.nodes
-    label = chalk.yellow "  • [incomplete]"
-    "#{ label } #{ i.help }\n#{ chalk.gray nodeTargets.join('\n') }"
-
-  console.error [violations..., incomplete...].join('\n'), '\n'
+  if hasErrors
+    violations = getErrorsString results.violations, 'violation', 'red'
+    incomplete = getErrorsString results.incomplete, 'incomplete', 'yellow'
+    console.error [violations..., incomplete...].join('\n'), '\n'
 
 module.exports = ->
   testWindow = Nightmare()
