@@ -1,27 +1,24 @@
 commander = require 'commander'
+chalk = require 'chalk'
 crawler = require './crawler'
 
 crawlerUrl = null
-
-# crawlerOpts =
-#   include:
-#     describe: 'A string that URLs must include to be crawled.'
-#   csv:
-#     describe: 'Dump output to a CSV file at the specified path.'
-#   levels:
-#     describe: 'Comma-separated list of accessibility levels to enforce.'
-#     default: 'wcag2a,wcag2aa'
+validTags = ['wcag2a', 'wcag2aa', 'section508', 'best-practice']
 
 collectFilters = (filterString, filtersList) ->
   filtersList.push filterString
   return filtersList
 
+parseTags = (tagStr) ->
+  return tagStr.split(',').map (str) -> str.trim()
+
 commander
 .usage '[options] <url>'
 .description 'Crawls a website and reports accessibility issues for each page.'
 .option '-c, --csv <filepath>', 'path to CSV output file'
-.option '-i, --include <string>', 'include only URLs containing this string (can use multiple times)', collectFilters, []
-.option '-e, --exclude [string]', 'exclude any URLs containing this string (can use multiple times)', collectFilters, []
+.option '-i, --include [string]', 'include only URLs containing this string', collectFilters, []
+.option '-e, --exclude [string]', 'exclude any URLs containing this string', collectFilters, []
+.option '-t, --tags <string>', "comma-separated list of rule tags (#{ validTags.join(',') })", parseTags, 'wcag2aa'
 .parse process.argv
 
 unless commander.args[0]
@@ -32,3 +29,4 @@ crawler
   csv: commander.csv,
   include: commander.include
   exclude: commander.exclude
+  tags: commander.tags

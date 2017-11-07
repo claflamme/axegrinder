@@ -7,7 +7,7 @@ chalk = require 'chalk'
 driver = require './driver'
 
 module.exports = (config) ->
-  testUrl = driver csv: config.csv
+  testUrl = driver config
 
   crawlUrl = (crawlUrl, onItem, onComplete) ->
     crawler = Crawler crawlUrl

@@ -75,9 +75,17 @@ module.exports = (driverConfig) ->
     process.exit()
 
   (url, callback) ->
+    axeConfig =
+      runOnly:
+        type: 'tag'
+        values: driverConfig.tags
+
+    axeRunner = (axeConfig, done) ->
+      axe.run document, axeConfig, done
+
     testWindow.goto(url)
     .inject('js', path.join(__dirname, 'node_modules', 'axe-core', 'axe.js'))
-    .evaluate((done) -> axe.run done)
+    .evaluate(axeRunner, axeConfig)
     .then(
       (results) ->
         logResults url, results
