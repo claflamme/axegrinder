@@ -19,6 +19,7 @@ commander
 .option '-i, --include [string]', 'include only URLs containing this string', collectFilters, []
 .option '-e, --exclude [string]', 'exclude any URLs containing this string', collectFilters, []
 .option '-t, --tags <string>', "comma-separated list of rule tags (#{ validTags.join(',') })", parseTags, 'wcag2aa'
+.option '-x, --xpaths', 'show xpaths in console results'
 .parse process.argv
 
 unless commander.args[0]
@@ -30,3 +31,4 @@ crawler
   include: commander.include
   exclude: commander.exclude
   tags: commander.tags
+  xpaths: commander.xpaths

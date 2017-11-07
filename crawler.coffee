@@ -12,6 +12,7 @@ module.exports = (config) ->
   crawlUrl = (crawlUrl, onItem, onComplete) ->
     crawler = Crawler crawlUrl
     urlList = []
+    skipExtensions = ['css', 'js', 'png', 'jpg', 'gif', 'svg', 'psd', 'ai', 'zip', 'gz', 'xz', 'pdf']
 
     crawler.on 'crawlstart', ->
       console.log '\n--- Building sitemap. This might take a bit...\n'
@@ -24,6 +25,10 @@ module.exports = (config) ->
     crawler.on 'complete', ->
       console.log '\n--- Sitemap completed!\n'
       onComplete urlList
+
+    crawler.addFetchCondition (queueItem) ->
+      not skipExtensions.some (ext) ->
+        queueItem.path.endsWith ".#{ ext }"
 
     # Include only URLs with a given string
     if config.include?.length > 0
@@ -42,6 +47,8 @@ module.exports = (config) ->
     crawler.maxConcurrency = 5
     crawler.allowInitialDomainChange = true
     crawler.respectRobotsTxt = false
+    crawler.parseHTMLComments = false
+    crawler.parseScriptTags = false
 
     crawler.start()
 

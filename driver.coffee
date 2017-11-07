@@ -29,7 +29,7 @@ module.exports = (driverConfig) ->
     chalk.gray strings.join '\n'
 
   getUrlString = (url, icon, colour) ->
-    chalk.bold[colour] "#{ icon } #{ url }\n"
+    chalk.bold[colour] "#{ icon } #{ url }"
 
   # Returns a printable string with aXe errors and (optionally) xpaths
   # for the erroneous nodes. Accepts an aXe "violations" collection.
@@ -37,7 +37,10 @@ module.exports = (driverConfig) ->
     violations = axeErrors.map (v) ->
       nodeTargets = getXpathsFromNodes v.nodes
       label = chalk[colour] "  • [#{ severityLabel }]"
-      "#{ label } #{ v.help }\n#{ getXpathsString(nodeTargets) }"
+      out = "#{ label } #{ v.help }"
+      if driverConfig.xpaths
+        out += "\n#{ getXpathsString(nodeTargets) }"
+      out
 
   logResults = (url, results) ->
     hasErrors = false
