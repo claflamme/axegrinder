@@ -5,47 +5,54 @@ Crawler = require 'simplecrawler'
 chalk = require 'chalk'
 
 driver = require './driver'
-testUrl = driver()
 
-crawlUrl = (crawlUrl, onItem, onComplete) ->
-  crawler = Crawler crawlUrl
-  urlList = []
-  urlPath = url.parse(crawlUrl).path
+module.exports = (config) ->
+  testUrl = driver csv: config.csv
 
-  crawler.on 'crawlstart', ->
-    console.log '\n--- Building sitemap. This might take a bit...\n'
+  crawlUrl = (crawlUrl, onItem, onComplete) ->
+    crawler = Crawler crawlUrl
+    urlList = []
 
-  crawler.on 'queueadd', (queueItem) ->
-    urlList.push queueItem.url
-    console.log chalk.gray "Added item ##{ queueItem.id } to queue: #{ queueItem.uriPath }"
-    onItem queueItem
+    crawler.on 'crawlstart', ->
+      console.log '\n--- Building sitemap. This might take a bit...\n'
 
-  crawler.on 'complete', ->
-    console.log '\n--- Sitemap completed!\n'
-    onComplete urlList
+    crawler.on 'queueadd', (queueItem) ->
+      urlList.push queueItem.url
+      console.log chalk.gray "Added item ##{ queueItem.id } to queue: #{ queueItem.uriPath }"
+      onItem queueItem
 
-  crawler.addFetchCondition (queueItem, referrerQueueItem) ->
-    queueItem.path.includes urlPath
+    crawler.on 'complete', ->
+      console.log '\n--- Sitemap completed!\n'
+      onComplete urlList
 
-  crawler.host = url.parse(crawlUrl).hostname
-  crawler.filterByDomain = true
-  crawler.stripQuerystring = true
-  crawler.downloadUnsupported = false
-  crawler.maxConcurrency = 5
-  crawler.allowInitialDomainChange = true
-  crawler.respectRobotsTxt = false
+    # Include only URLs with a given string
+    if config.include?.length > 0
+      crawler.addFetchCondition (queueItem) ->
+        config.include.some (str) -> queueItem.path.includes str
 
-  crawler.start()
+    # Exclude any URLs with a given string
+    if config.exclude?.length > 0
+      crawler.addFetchCondition (queueItem) ->
+        not config.exclude.some (str) -> queueItem.path.includes str
 
-onItem = (item) ->
-  # Nothing for now...
+    crawler.host = url.parse(crawlUrl).hostname
+    crawler.filterByDomain = true
+    crawler.stripQuerystring = true
+    crawler.downloadUnsupported = false
+    crawler.maxConcurrency = 5
+    crawler.allowInitialDomainChange = true
+    crawler.respectRobotsTxt = false
 
-onComplete = (urlList) ->
-  eachSeries urlList, ((url, callback) ->
-    testUrl url, callback
-  ), ( ->
-    process.exit 0
-  )
+    crawler.start()
 
-module.exports = (argv) ->
-  crawlUrl argv.url, onItem, onComplete
+  onItem = (item) ->
+    # Nothing for now...
+
+  onComplete = (urlList) ->
+    eachSeries urlList, ((url, callback) ->
+      testUrl url, callback
+    ), ( ->
+      process.exit 0
+    )
+
+  crawlUrl config.url, onItem, onComplete
