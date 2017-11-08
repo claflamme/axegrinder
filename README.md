@@ -1,62 +1,116 @@
 # Axegrinder
 
-An all-in-one tool for crawling websites and running aXe accessibility tests on them.
+Axegrinder is a command-line tool for developers that crawls websites and runs [aXe](https://www.axe-core.org) accessibility tests on every page it finds. Tests are run in a headless chromium instance—the real deal.
 
-<p align="center">
-  <img src="http://i.imgur.com/BOYkHfu.gif" />
-</p>
-
-> This tool is for flagging problematic pages. For detailed results, try one of the aXe browser plugins.
+> This tool is only meant for find and flagging problematic pages. For detailed (and interactive) results, try one of the aXe browser plugins.
 >
 > 👉 [Chrome](https://chrome.google.com/webstore/detail/axe/lhdoppojpmngadmnindnejefpokejbdd) 👉 [Firefox](https://addons.mozilla.org/en-us/firefox/addon/axe-devtools/)
 
 ## Installation
 
-```
+Axegrinder is a node.js package so you'll need [node and npm installed](https://nodejs.org). You can install the package globally and run it from the command line.
+
+```shell
 npm i axegrinder -g
 ```
 
-Axegrinder is a node.js package so you'll need [node and npm installed](https://nodejs.org). If you don't have node installed already, you're probably the only one.
+## Reference
 
-## Usage
+Further explanations of all the options can be found below.
 
-For now, axegrinder only has one command: `crawl`. You can point the tool at a URL and it will do its best to go through the entire website until it runs out of new links.
+```shell
+Usage: axegrinder [options] <url>
 
-```
-axegrinder crawl https://nodejs.org
-```
+Crawls a website and reports accessibility issues for each page.
 
-This will output the results of the crawl to the terminal, in a formatted list. Pages with accessibility violations will be highlighted in red.
 
-### CSV Output
+Options:
 
-Of course, it would be much more useful to save your results to a spreadsheet. By using the `--csv` flag, axegrinder can log each violation along with the URL of the page on which it was found.
-
-```
-axegrinder crawl https://nodejs.org --csv=output.csv
-```
-
-If you abort the crawl early, your results up to that point will still be saved to the CSV file.
-
-### Accessibility Standards
-
-Since axegrinder is a wrapper around aXe, you can use any of the aXe "tags" to specify which standards to validate against. You can set multiple standards at once, as a comma-separated list:
-
-```
-axegrinder crawl http://nodejs.org --levels=wcag2a,wcag2aa
+  -c, --csv <filepath>    path to CSV output file
+  -i, --include [string]  include only URLs containing this string
+  -e, --exclude [string]  exclude any URLs containing this string
+  -t, --tags <string>     comma-separated list of rule tags (wcag2a,wcag2aa,section508,best-practice)
+  -x, --xpaths            show xpaths in console results
+  -h, --help              output usage information
 ```
 
-The available options are listed below. I think the names are pretty self-explanatory, but you can check the aXe docs if you want specifics.
+## Basic Usage
+
+Point axegrinder at a URL and it will do its best to find and test as many pages as possible.
+
+```shell
+axegrinder https://nodejs.org
+```
+
+First, it will build a map of the site by crawling as much as it can. Once that's done, it will run through every page and execute a battery of accessibility tests in a headless browser.
+
+Results logged to the terminal will either be a pass (in green), or contain a list of violations (in red). If aXe was unable to complete certain tests, those will be marked as "incomplete" (highlighted in yellow).
+
+## Options
+
+### -c, --csv
+
+Of course, it's not super useful to get results in the command line. For a more permanent results set, use the `--csv` option.
+
+```shell
+axegrinder crawl https://nodejs.org --csv=path/to/output.csv
+```
+
+Axegrinder will log each violation or incomplete test, along with the URL of the page that caused it. If you abort the crawl early, your results up to that point will still be saved to the CSV file.
+
+### -t, --tags
+
+Since axegrinder is a wrapper around aXe, you can use any of the aXe "tags" to specify which tests to run.
+
+```shell
+axegrinder crawl http://nodejs.org --tags=wcag2a,wcag2aa
+```
+
+Note that you can set multiple tags at once, as a comma-separated list. By default, axegrinder sets this option to `wcag2aa` (AA compliance).
+
+The available options are listed below. The names are pretty self-explanatory, but you can [check the aXe docs](https://github.com/dequelabs/axe-core/blob/develop/doc/rule-descriptions.md) for specifics.
 
 - `wcag2a`
 - `wcag2aa`
 - `section508`
 - `best-practice`
 
-### Filter URLs
+### -i, --include
 
-You can include only pages whose URL contains a specific string. Just use the `--include` arg.
+Odds are pretty good that you don't want to test your entire site all at once. You can use the `--include` arg to only include pages that have a specific string in the URL.
 
+```shell
+# Only scan pages with "/en/about" in the URL
+axegrinder crawl https://nodejs.org --include=/en/about
 ```
-axegrinder crawl https://nodejs.org --include=/url/pattern
+
+This option can be used multiple times to specify several strings.
+
+### -e, --exclude
+
+This works the opposite way that the "include" option works. Use `--exclude` to ignore pages that have a given string in their URL.
+
+```shell
+# Skip any pages with "/blog" in the URL
+axegrinder crawl https://nodejs.org --exclude=/blog
+```
+
+This option can be used multiple times to specify several strings.
+
+### -x, --xpaths
+
+If you'd like to include the xpaths for nodes that triggered violations, you can do so with the `--xpaths` flag. Adding this flag causes lists of xpaths to show up in your results.
+
+```shell
+axegrinder crawl https://nodejs.org --xpaths
+```
+
+This can be useful for a quick idea of how many specific issues your pages have, but I very much advise against using it for any serious debugging. The [official aXe browser extensions](https://www.axe-core.org) are specifically built for that purpose and do an infinitely better job.
+
+### -h, --help
+
+Print out the handy-dandy help dialogue, as seen in the Reference section.
+
+```shell
+axegrinder --help
 ```
