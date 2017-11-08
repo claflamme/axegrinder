@@ -1,6 +1,6 @@
 {
   "name": "axegrinder",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "./axegrinder",
   "author": "Cory LaFlamme <me@corylaflamme.com> (https://github.com/claflamme)",
   "description": "Crawl websites for accessibility issues from the command line.",
