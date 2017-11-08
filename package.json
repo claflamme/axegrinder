@@ -1,6 +1,6 @@
 {
   "name": "axegrinder",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "main": "./axegrinder",
   "author": "Cory LaFlamme <me@corylaflamme.com> (https://github.com/claflamme)",
   "description": "Crawl websites for accessibility issues from the command line.",
@@ -16,9 +16,11 @@
     "command-line",
     "command",
     "line",
-    "phantomjs",
-    "selenium",
-    "webdriver"
+    "nightmare",
+    "electron",
+    "chromium",
+    "chrome",
+    "headless"
   ],
   "bugs": {
     "url": "https://github.com/claflamme/axegrinder/issues"
